@@ -1,12 +1,12 @@
 # AutoTempMatch
 This repository contains code and demo data for a fully-automated template matching algorithm for ECG-free heartbeat detection in cardiomechanical signals.
-If you use the AutoTempMatch algorithm in your research, please cite the the following article:
+If you use the <b>AutoTempMatch</b> algorithm in your research, please cite the the following article:
 
 <h3><i>Parlato, S., Centracchio, J., Esposito, D., Bifulco, P., & Andreozzi, E. (2025). Fully Automated Template Matching Method for ECG-Free Heartbeat Detection in Cardiomechanical Signals of Healthy and Pathological Subjects. Physical and Engineering Sciences in Medicine.</i></h3>
 
-The AutoTempMatch algorithm can be used to accurately localize heartbeats in cardiomechanical signals, like Seismocardiography, Gyrocardiography, Phonocardiography, and Forcecardiography signals, without the need for a simultaneous electrocardiography trace. The AutoTempMatch algorithm provides very high performance in localization of heartbeats and estimation of inter-beat intervals, also in cardiomechanical signals of patients with valvular heart diseases.
+The <b>AutoTempMatch</b> algorithm can be used to accurately localize heartbeats in cardiomechanical signals, like Seismocardiography, Gyrocardiography, Phonocardiography, and Forcecardiography signals, without the need for a simultaneous electrocardiography trace. The <b>AutoTempMatch</b> algorithm provides very high performance in localization of heartbeats and estimation of inter-beat intervals, also in cardiomechanical signals of patients with valvular heart diseases.
 
-The AutoTempMatch has also proved effective in localizing heartbeats in Photoplethismography signals, and generally in mechanical pulse signals recorded via force sensors [5].
+The <b>AutoTempMatch</b> algorithm has also proved effective in localizing heartbeats in Photoplethismography signals, and generally in mechanical pulse signals recorded via force sensors [5].
 
 
 Additional useful information can be found in the following references:

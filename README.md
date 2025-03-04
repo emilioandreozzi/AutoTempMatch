@@ -6,7 +6,7 @@ If you use the <b>AutoTempMatch</b> algorithm in your research, please cite the 
 
 The <b>AutoTempMatch</b> algorithm can be used to accurately localize heartbeats in cardiomechanical signals, like Seismocardiography, Gyrocardiography, Phonocardiography, and Forcecardiography signals, without the need for a simultaneous electrocardiography trace. The <b>AutoTempMatch</b> algorithm provides very high performance in localization of heartbeats and estimation of inter-beat intervals, also in cardiomechanical signals of patients with valvular heart diseases.
 
-The <b>AutoTempMatch</b> algorithm has also proved effective in localizing heartbeats in Photoplethismography signals, and generally in mechanical pulse signals recorded via force sensors <sup>5</sup>.
+The <b>AutoTempMatch</b> algorithm has also proved effective in localizing heartbeats in Photoplethismography signals, and generally in mechanical pulse signals recorded via force sensors <sup>5,6</sup>.
 
 Additional useful information can be found in the following references:
 
@@ -17,5 +17,6 @@ Additional useful information can be found in the following references:
 <li>Parlato, S., Centracchio, J., Esposito, D., Bifulco, P., & Andreozzi, E. (2023). ECG-Free Heartbeat Detection in Seismocardiography and Gyrocardiography Signals Provides Acceptable Heart Rate Variability Indices in Healthy and Pathological Subjects. Sensors, 23(19), 8114. https://doi.org/10.3390/s23198114</li>
 <li>Centracchio, J., Parlato, S., Esposito, D., & Andreozzi, E. (2024). Accurate Localization of First and Second Heart Sounds via Template Matching in Forcecardiography Signals. Sensors, 24(5), 1525. https://doi.org/10.3390/s24051525</li>
 <li>Andreozzi, E., Sabbadini, R., Centracchio, J., Bifulco, P., Irace, A., Breglio, G., & Riccio, M. (2022). Multimodal Finger Pulse Wave Sensing: Comparison of Forcecardiography and Photoplethysmography Sensors. Sensors, 22(19), 7566. https://doi.org/10.3390/s22197566</li>
+<li>Parlato, S., Esposito, D., Centracchio, J., Andreozzi, E., Gragnaniello, M. & Riccio, M. "A New, Simple Wrist-Mounted PVDF Sensor for Continuous Heart Rate Monitoring," 2024 IEEE Sensors Applications Symposium (SAS), Naples, Italy, 2024, pp. 1-6, https://doi.org/10.1109/SAS60918.2024.10636484.</li>
 </ol>
 </i>

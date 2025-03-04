@@ -18,6 +18,7 @@ function [Heartbeats,tmpl,wtmpl,NCC,params] = AutoTempMatch(sig,fs,varargin)
 %    E. (2025). Fully Automated Template Matching Method for ECG-Free
 %    Heartbeat Detection in Cardiomechanical Signals of Healthy and
 %    Pathological Subjects. Physical and Engineering Sciences in Medicine.
+%    https://doi.org/10.1007/s13246-025-01531-3
 %
 %
 % Additional details on the method and its performance are reported in the

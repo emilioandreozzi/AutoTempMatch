@@ -8,6 +8,8 @@ The <b>AutoTempMatch</b> algorithm can be used to accurately localize heartbeats
 
 The <b>AutoTempMatch</b> algorithm has also proved effective in localizing heartbeats in Photoplethismography signals, and generally in mechanical pulse signals recorded via force sensors <sup>5,6</sup>.
 
+Should you need any support in using the AutoTempMatch code, do not hesitate to contact us at the following e-mail addresses: emilio.andreozzi@unina.it, jessica.centracchio@unina.it, salvatore.parlato@unina.it, paolo.bifulco@unina.it
+
 Additional useful information can be found in the following references:
 
 <i>

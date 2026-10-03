@@ -219,6 +219,52 @@ end
 
 
 
+function NCC = nxcorr(sig,templ,tempRefInd)
+
+% Length of the template
+Ltempl = length(templ); 
+
+% Remove the mean from the template
+templ = templ - mean(templ);
+
+
+%CROSS-CORRELATION
+% Cross-correlation computed as convolution on the signal with the flipped
+% template
+CC = conv(sig,flipud(templ),'same');
+
+
+% NORMALIZATION
+% Energy of the template
+Et = sum(templ.^2);
+
+% Local energies of the signal computed via moving sum of the squared
+% signal
+Es = conv(sig.^2,ones(size(templ)),'same') - conv(sig,ones(size(templ)),'same').^2/Ltempl;
+
+% Normalized cross-correlation aligned to the center of the template
+NCC = CC./sqrt(Et*Es);
+
+
+% ALIGNMENT
+% Align NCC to the time reference provided as input
+
+% Lag between the provided time reference and the center of the template
+lag = tempRefInd - ceil(Ltempl/2); 
+
+% Alignment based on the lag
+if(lag < 0)
+    NCC = [NCC(-lag+1:end); zeros(-lag,1)];
+else
+    NCC = [zeros(lag,1); NCC(1:end-lag);];
+end
+
+
+end
+
+
+
+
 function [tmpl,wtmpl] = AutoTemplSel(sig,fs,TimeWin,pre,post,envopts)
 % This function performs an automatic selection of a heartbeat template
 % from a cardio-mechanical signals, such as Seismocardiogram or

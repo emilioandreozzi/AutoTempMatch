@@ -12,39 +12,34 @@ function [Heartbeats,tmpl,wtmpl,NCC,params] = AutoTempMatch(sig,fs,varargin)
 % signal.
 %
 %
-% When using this function, please cite the following article:
+% The method is described in the following articles:
 %
 % 1) Parlato, S., Centracchio, J., Esposito, D., Bifulco, P., & Andreozzi,
-%    E. (2025). Fully Automated Template Matching Method for ECG-Free
-%    Heartbeat Detection in Cardiomechanical Signals of Healthy and
-%    Pathological Subjects. Physical and Engineering Sciences in Medicine.
-%    https://doi.org/10.1007/s13246-025-01531-3
-%
-%
-% Additional details on the method and its performance are reported in the
-% following articles:
+%    E. (2025). Fully automated template matching method for ECG-free
+%    heartbeat detection in cardiomechanical signals of healthy and
+%    pathological subjects. Physical and Engineering Sciences in Medicine,
+%    48, 649–664. https://doi.org/10.1007/s13246-025-01531-3    
 %
 % 2) Centracchio, J., Parlato, S., Esposito, D., Bifulco, P., & Andreozzi,
 %    E. (2023). ECG-Free Heartbeat Detection in Seismocardiography Signals
-%    via Template Matching. Sensors (Basel, Switzerland), 23(10), 4684.
-%    https://doi.org/10.3390/s23104684   
-% 
+%    via Template Matching. Sensors, 23(10), 4684.
+%    https://doi.org/10.3390/s23104684
+%
 % 3) Parlato, S., Centracchio, J., Esposito, D., Bifulco, P., & Andreozzi,
 %    E. (2023). Heartbeat Detection in Gyrocardiography Signals without
-%    Concurrent ECG Tracings. Sensors (Basel, Switzerland), 23(13), 6200.
-%    https://doi.org/10.3390/s23136200   
-% 
+%    Concurrent ECG Tracings. Sensors, 23(13), 6200.
+%    https://doi.org/10.3390/s23136200 
+%
 % 4) Parlato, S., Centracchio, J., Esposito, D., Bifulco, P., & Andreozzi,
 %    E. (2023). ECG-Free Heartbeat Detection in Seismocardiography and
 %    Gyrocardiography Signals Provides Acceptable Heart Rate Variability
-%    Indices in Healthy and Pathological Subjects. Sensors (Basel,
-%    Switzerland), 23(19), 8114. https://doi.org/10.3390/s23198114    
-% 
+%    Indices in Healthy and Pathological Subjects. Sensors, 23(19), 8114.
+%    https://doi.org/10.3390/s23198114 
+%
 % 5) Centracchio, J., Parlato, S., Esposito, D., & Andreozzi, E. (2024).
 %    Accurate Localization of First and Second Heart Sounds via Template
-%    Matching in Forcecardiography Signals. Sensors (Basel, Switzerland),
-%    24(5), 1525. https://doi.org/10.3390/s24051525   
-%
+%    Matching in Forcecardiography Signals. Sensors, 24(5), 1525.
+%    https://doi.org/10.3390/s24051525 
 %
 %
 %
@@ -59,6 +54,7 @@ function [Heartbeats,tmpl,wtmpl,NCC,params] = AutoTempMatch(sig,fs,varargin)
 %
 % Parameter names and descriptions:
 % - 'TimeWin':    time window (in seconds) used to select the template (default is 10 s) 
+% - 'SlideTime':  time increment (in seconds) used to move to the next time window for template selection (default is 1 s)
 % - 'pre':        value of the median IBI for the interval preceding the envelope peak (default is 0.2 s)
 % - 'post':       value of the median IBI for the interval preceding the envelope peak (default is 0.5 s)
 % - 'envopts':    cell array of parameters for the envelope extraction (default is rectification + LP filtering at 3 Hz, with MinPeakProminence of 0.25)
@@ -129,6 +125,17 @@ else
     end
 end
 
+
+% Slide time for template selection
+if(~exist('SlideTime','var'))
+    SlideTime = 1;
+else
+    if(isempty(SlideTime))
+        SlideTime = 1;
+    end
+end
+
+
 % Pre and Post intervals for template selection
 if(~exist('pre','var'))
     pre = 0.2;
@@ -177,6 +184,7 @@ else
 end
 
 params.TimeWin = TimeWin;
+params.SlideTime = SlideTime;
 params.pre = pre;
 params.post = post;
 params.envopts = envopts;
@@ -188,7 +196,7 @@ params.NCCpkdist = NCCpkdist;
 % tmpl contains the selected template
 % wtmpl contains the indices of the samples included in the selected
 %       template, referred to the whole input signal "sig"
-[tmpl,wtmpl] = AutoTemplSel(sig,fs,TimeWin,pre,post,envopts);
+[tmpl,wtmpl] = AutoTemplSel(sig,fs,TimeWin,SlideTime,pre,post,envopts);
 
 if(isempty(tmpl))
     fprintf('\n\nERROR:\nNo reliable segment was found for the selection of a heartbeat template.\n\n')
@@ -204,8 +212,8 @@ else
     %% NORMALIZED CROSS-CORRELATION
     NCC = nxcorr(sig,tmpl,imax); 
     NCC(NCC<0) = 0;
-    cut = length(NCC)-length(sig);
-    NCC = NCC(cut/2+1:end-cut/2); 
+%     cut = length(NCC)-length(sig);
+%     NCC = NCC(cut/2+1:end-cut/2); 
     
     
     
@@ -216,8 +224,6 @@ end
 
 
 end
-
-
 
 function NCC = nxcorr(sig,templ,tempRefInd)
 
@@ -262,10 +268,7 @@ end
 
 end
 
-
-
-
-function [tmpl,wtmpl] = AutoTemplSel(sig,fs,TimeWin,pre,post,envopts)
+function [tmpl,wtmpl] = AutoTemplSel(sig,fs,TimeWin,SlideTime,pre,post,envopts)
 % This function performs an automatic selection of a heartbeat template
 % from a cardio-mechanical signals, such as Seismocardiogram or
 % Gyrocardiogram.
@@ -296,7 +299,8 @@ function [tmpl,wtmpl] = AutoTemplSel(sig,fs,TimeWin,pre,post,envopts)
 % INPUTS:
 % - sig: input signal
 % - fs: sampling frequency of the input signal
-% - TimeWin: time window (in seconds) used to select the template (default is 10 s) 
+% - TimeWin: time window (in seconds) used to select the template (default is 10 s)
+% - SlideTime: time increment (in seconds) used to move to the next time window for template selection (default is 1 s)
 % - pre: value of the median IBI for the interval preceding the envelope peak
 % - post: value of the median IBI for the interval preceding the envelope peak
 % - envopts: array of parameters for the envelope extraction:
@@ -319,22 +323,6 @@ function [tmpl,wtmpl] = AutoTemplSel(sig,fs,TimeWin,pre,post,envopts)
 %     MinPeakProminence for envelope peaks detection
 
 
-% %% DEFAULT OPTIONS
-% 
-% % TIME WINDOW
-% if(~exist('TimeWin','var'))
-%     TimeWin = 10;
-% end
-% 
-% % PRE AND POST
-% if(~exist('pre','var'))
-%     pre = 0.2;
-% end
-% 
-% if(~exist('post','var'))
-%     post = 0.5;
-% end
-% 
 % ENVELOPE
 if(exist('envopts','var'))
     ENV = envopts{1};
@@ -349,8 +337,10 @@ end
 
 %% TEMPLATE SELECTION
 normabs = @(x) x/max(abs(x(:)));
-N = TimeWin*fs;
-int2 = 1:N;
+
+N = TimeWin*fs;     % Search window length in samples
+DN = SlideTime*fs;  % Sliding time increment for next window
+int2 = 1:N;         % Initial search window
 
 go = 0;
 chunkOK = 0;
@@ -392,7 +382,7 @@ while(go == 0)
         go = 1;
         chunkOK = 1;
     else
-        int2 = int2(end)+1:(int2(end)+1+N);
+        int2 = int2(1)+DN:int2(end)+DN;  % time window update
         if(int2(end) > length(sig))
             go = 1;
             chunkOK = 0;
